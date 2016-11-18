@@ -331,6 +331,10 @@ public class NewJFrame extends javax.swing.JFrame {
 
         if (e.getKeyCode() == KeyEvent.VK_UNDEFINED) {
             switch (c) {
+                case '\b':
+                    if(estados.size() > 1)
+                        estados.remove(estados.size() -1);
+                    break;
                 case 'q':
                     if (estados.get(estados.size() - 1) != Estados.PLANEJANDO) {
                         estados.add(Estados.PLANEJANDO);
