@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,7 +19,8 @@ import javax.swing.JOptionPane;
 public class NewJFrame extends javax.swing.JFrame {
 
     public static List<Estados> estados = new ArrayList();
-
+    public static List<Long> times = new ArrayList();
+    public static long tempoInicial = System.currentTimeMillis();
     public static enum Estados {
         PLANEJANDO, CODIFICANDO, EXECUTANDO, MUDAR_ROBO, OBS_ROBO, MOD_ALEAT, OBS_ALEAT;
     }
@@ -35,6 +37,7 @@ public class NewJFrame extends javax.swing.JFrame {
         initComponents();
         attAll();
         initStates();
+        
     }
 
     /**
@@ -65,6 +68,7 @@ public class NewJFrame extends javax.swing.JFrame {
         mudar_aleat = new javax.swing.JLabel();
         obs_aleat = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -127,6 +131,8 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jLabel1.setText("Gerar Resultados (B)");
 
+        jLabel2.setText("tempo total");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -157,7 +163,10 @@ public class NewJFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(obs_robo)
-                            .addComponent(jLabel20))))
+                            .addComponent(jLabel20)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel2)))
                 .addGap(24, 24, 24))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -192,7 +201,9 @@ public class NewJFrame extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addGap(1, 1, 1)
                 .addComponent(planejar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel17)
@@ -334,42 +345,56 @@ public class NewJFrame extends javax.swing.JFrame {
                 case '\b':
                     if(estados.size() > 1)
                         estados.remove(estados.size() -1);
+                        times.remove(times.size() -1);
                     break;
                 case 'q':
                     if (estados.get(estados.size() - 1) != Estados.PLANEJANDO) {
                         estados.add(Estados.PLANEJANDO);
+                        times.add(System.currentTimeMillis()-tempoInicial);
                     }
                     break;
                 case 'e':
                     estados.add(Estados.EXECUTANDO);
+                    times.add(System.currentTimeMillis()-tempoInicial);
                     break;
                 case 'd':
                     if (estados.get(estados.size() - 1) != Estados.CODIFICANDO) {
                         estados.add(Estados.CODIFICANDO);
+                        times.add(System.currentTimeMillis()-tempoInicial);
                     }
                     break;
                 case 'y':
                     if (estados.get(estados.size() - 1) != Estados.MUDAR_ROBO) {
                         estados.add(Estados.MUDAR_ROBO);
+                        times.add(System.currentTimeMillis()-tempoInicial);
                     }
                     break;
                 case 'i':
                     if (estados.get(estados.size() - 1) != Estados.OBS_ROBO && estados.get(estados.size() - 1) != Estados.EXECUTANDO) {
                         estados.add(Estados.OBS_ROBO);
+                        times.add(System.currentTimeMillis()-tempoInicial);
                     }
                     break;
                 case 'h':
                     if (estados.get(estados.size() - 1) != Estados.MOD_ALEAT) {
                         estados.add(Estados.MOD_ALEAT);
+                        times.add(System.currentTimeMillis()-tempoInicial);
                     }
                     break;
                 case 'k':
                     if (estados.get(estados.size() - 1) != Estados.OBS_ALEAT) {
                         estados.add(Estados.OBS_ALEAT);
+                        times.add(System.currentTimeMillis()-tempoInicial);
                     }
                     break;
                 case 'b':
-                    new Resp2(estados.toString()).setVisible(true);
+                    new Resp2(estados.toString()+"\n"+times.toString()).setVisible(true);
+                    break;
+                case '=':
+                    estados = new ArrayList();
+                    initStates();
+                    times = new ArrayList();
+                    tempoInicial = System.currentTimeMillis();
                     break;
             }
             paintThinks();
@@ -386,6 +411,7 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
